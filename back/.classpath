@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="coursJpaJsf-ejb/src/main/java"/>
+	<classpathentry kind="src" path="coursJpaJsf-web/src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Hend/.m2/repository/javax/javaee-api/7.0/javaee-api-7.0.jar" sourcepath="C:/Users/Hend/.m2/repository/javax/javaee-api/7.0/javaee-api-7.0-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="org.eclipse.jst.component.archivename" value="javaee-api-7.0.jar"/>
+			<attribute name="maven.groupId" value="javax"/>
+			<attribute name="maven.artifactId" value="javaee-api"/>
+			<attribute name="maven.version" value="7.0"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
