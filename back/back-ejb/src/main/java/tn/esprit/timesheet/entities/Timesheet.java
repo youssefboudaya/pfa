@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.*;
+
+import tn.esprit.employe.entities.Employe;
+import tn.esprit.employe.entities.Mission;
 @Entity
 public class Timesheet implements Serializable{
 
@@ -11,7 +14,13 @@ public class Timesheet implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 321958009689014279L;
-	
+	@ManyToOne
+    @JoinColumn(name = "idEmploye", referencedColumnName = "id", insertable=false, updatable=false)
+	private Employe employe;
+	//idMission est a la fois primary key et foreign key
+		@ManyToOne
+	    @JoinColumn(name = "idMission", referencedColumnName = "id", insertable=false, updatable=false)
+		private Mission mission;
 	private Integer duree;
 	private String activity;
 	@OneToOne
