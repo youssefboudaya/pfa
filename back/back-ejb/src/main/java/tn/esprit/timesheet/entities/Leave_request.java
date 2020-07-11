@@ -24,6 +24,20 @@ public class Leave_request implements Serializable {
 	@ManyToOne
 	private User user;
 	
+	public Leave_request() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Leave_request(Integer idLeave_request, String title, String status, Date date, User user) {
+		super();
+		this.idLeave_request = idLeave_request;
+		this.title = title;
+		this.status = status;
+		this.date = date;
+		this.user = user;
+	}
+
 	public Integer getIdLeave_request() {
 		return idLeave_request;
 	}

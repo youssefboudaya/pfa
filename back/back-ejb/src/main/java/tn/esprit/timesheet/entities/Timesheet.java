@@ -19,9 +19,25 @@ public class Timesheet implements Serializable{
 	@ManyToOne
 	private User user;
 	@Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 private Integer idTimesheet;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer idTimesheet;
 	
+	public Timesheet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+
+	public Timesheet(Integer duree, String activity, Project project, User user, Integer idTimesheet) {
+		super();
+		this.duree = duree;
+		this.activity = activity;
+		this.project = project;
+		this.user = user;
+		this.idTimesheet = idTimesheet;
+	}
+
+
 	public Integer getIdTimesheet() {
 		return idTimesheet;
 	}

@@ -64,10 +64,9 @@
         <!-- maven-compiler-plugin -->
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
-            <failOnMissingWebXml>false</failOnMissingWebXml>
-        
-    </properties>
-
+         
+    	
+	</properties>
     <dependencyManagement>
         <dependencies>
 
@@ -113,7 +112,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+			
         </dependencies>
     </dependencyManagement>
 
@@ -133,6 +132,7 @@
                     <configuration>
                         <skip>true</skip>
                     </configuration>
+                    
                 </plugin>
             </plugins>
         </pluginManagement>

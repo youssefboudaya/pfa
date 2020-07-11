@@ -17,9 +17,23 @@ public class Project implements Serializable {
 	private Integer idProject;
 	@ManyToMany
 	private List<User> users;
-	private String title;
-	
+	private String title;	
 	private String description;
+	
+	
+	public Project() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Project(Integer idProject, List<User> users, String title, String description) {
+		super();
+		this.idProject = idProject;
+		this.users = users;
+		this.title = title;
+		this.description = description;
+	}
+
 	public Integer getIdProject() {
 		return idProject;
 	}
@@ -36,14 +50,24 @@ public class Project implements Serializable {
 		this.title = title;
 	}
 
-	public String getDuree() {
+	
+
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDuree(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
-
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
