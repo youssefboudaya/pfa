@@ -30,8 +30,8 @@ public class MissionsRessources {
 	@PostConstruct
 	public static void OnInit() throws NamingException {
 		MissionsRessources.props(MissionsRessources.jndiName);
-
 	}
+	
 	public static void props(String jndiName) throws NamingException{
 		MissionsRessources.context = new InitialContext();
 		MissionsRessources.proxy = (MissionServiceRemote) context.lookup(jndiName);

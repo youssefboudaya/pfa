@@ -1,0 +1,64 @@
+package evaluation.impl;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import evaluation.entities.Answer;
+import evaluation.entities.EvaluationSheet;
+import evaluation.entities.Question;
+import evaluation.entities.Utilisateur;
+import evaluation.services.AnswerServices;
+import evaluation.services.AnswerServicesRemote;
+import evaluation.services.QuestionServices;
+import evaluation.services.UtilisateurServices;
+
+@Stateless
+@LocalBean
+public class AnswerImpl implements AnswerServices, AnswerServicesRemote{
+	
+	@PersistenceContext(unitName= "primary")
+	EntityManager em;
+
+	@EJB
+	QuestionServices questionServices;
+	
+	@EJB
+	UtilisateurServices userServices;
+	
+	@Override
+	public void respondeToQuestion(Answer answer) {
+		em.persist(answer);
+	}
+
+	@Override
+	public void noteAnAnswer(Answer answer, Integer note) {
+		answer.setScore(note);
+		
+		em.persist(answer);
+	}
+
+	@Override
+	public void respondeToQuestionFromRest(Integer employeeId, Integer questionId, String response) {
+		Question question = questionServices.getById(questionId);
+		Utilisateur employe = userServices.get(employeeId);
+				
+		Answer answer = new Answer(employe, question, response);
+		
+		em.persist(answer);
+	}
+	
+	@Override
+	public Answer getById(Integer id) {
+		return em.find(Answer.class, id);
+	}
+
+	@Override
+	public void noteAnAnswerFromRest(Integer answerId, Integer note) {
+		Answer answer = this.getById(answerId);	
+		
+		this.noteAnAnswer(answer, note);
+	}
+}

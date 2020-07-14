@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,12 +15,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import evaluation.entities.EvaluationSheet;
+
 @Entity(name="user")
 public class User implements Serializable {
+	private static final long serialVersionUID = 4343374831941890073L;
+	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-    private String nom;
+    
+	private String nom;
     private String prenom;
     private Role role;
     private int manger_id;
@@ -50,8 +56,16 @@ public class User implements Serializable {
 		this.colloborator = colloborator;
 	}
 */
+    
+    
 	public int getid() {
 		return id;
+	}
+
+	public User(String nom, String prenom) {
+		super();
+		this.nom = nom;
+		this.prenom = prenom;
 	}
 
 	public void setid(int id) {
@@ -126,7 +140,8 @@ public class User implements Serializable {
 	
 	
 	
-	
+	@OneToMany(mappedBy="creator",cascade=CascadeType.ALL)
+	private List<EvaluationSheet> evaluationSheets;
 	
 	
 	
