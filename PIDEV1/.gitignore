@@ -1,0 +1,7 @@
+PIDEV1-ear/target/*
+PIDEV1-ejb/target/*
+PIDEV1-web/target/*
+
+PIDEV1-web/.settings/
+PIDEV1-ejb/.settings/
+PIDEV1-ear/.settings/
