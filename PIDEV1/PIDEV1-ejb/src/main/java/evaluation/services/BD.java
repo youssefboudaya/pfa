@@ -18,6 +18,8 @@ import evaluation.entities.EvaluationType;
 import evaluation.entities.Indicator;
 import evaluation.entities.Question;
 import evaluation.entities.Utilisateur;
+import manage.entities.Contrat;
+import manage.services.ContratServices;
 import services.UserService;
 
 @Startup
@@ -37,6 +39,9 @@ public class BD {
 	
 	@EJB
 	AnswerServices answerServices;
+	
+	@EJB
+	ContratServices contratServices;
 	
 	public BD() {
 		// TODO Auto-generated constructor stub

@@ -4,13 +4,19 @@ import java.io.Serializable;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 
 @Entity(name="payroll")
 public class Payroll implements Serializable {
 
-	@EmbeddedId
-	private String code_payroll;
+private static final long serialVersionUID = -8823921117744535534L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	private String label;
 	private String family;
 	
@@ -19,19 +25,14 @@ public class Payroll implements Serializable {
 		super();
 	}
 
-	public Payroll(String code_payroll, String label, String family) {
+	public Payroll(String label, String family) {
 		super();
-		this.code_payroll = code_payroll;
 		this.label = label;
 		this.family = family;
 	}
 
-	public String getCode_payroll() {
-		return code_payroll;
-	}
-
-	public void setCode_payroll(String code_payroll) {
-		this.code_payroll = code_payroll;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getLabel() {
