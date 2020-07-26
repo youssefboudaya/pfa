@@ -1,5 +1,7 @@
 package evaluation.services;
 
+import java.util.List;
+
 import javax.ejb.Remote;
 
 import evaluation.entities.Answer;
@@ -11,4 +13,5 @@ public interface AnswerServicesRemote {
 	void noteAnAnswer(Answer answer, Integer note);
 	void noteAnAnswerFromRest(Integer answerId, Integer note);
 	Answer getById(Integer id);
+	List<Answer> getUserAnswers(Integer userId);
 }

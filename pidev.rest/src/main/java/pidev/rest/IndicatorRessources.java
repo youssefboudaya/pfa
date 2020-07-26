@@ -36,7 +36,9 @@ public class IndicatorRessources {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Indicator createIndicator(Indicator indicator) {
-		proxy.createFromRest(indicator.getEvaluationSheetId(), indicator.getLabel());
+		Integer id = proxy.createFromRest(indicator.getEvaluationSheetId(), indicator.getLabel());
+		indicator.setId(id);
+		
 		return indicator;
 	}
 }

@@ -8,11 +8,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.criteria.Fetch;
 
 import entities.User;
 
@@ -41,7 +43,7 @@ public class EvaluationSheet implements Serializable {
 	
 	private String comment;
 	
-	@OneToMany(mappedBy="evaluationSheet",cascade=CascadeType.ALL)
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="evaluationSheet",cascade=CascadeType.ALL)
 	private List<Indicator> indicators; 
 	
 	public EvaluationSheet() {
@@ -104,5 +106,17 @@ public class EvaluationSheet implements Serializable {
 	public String toString() {
 		return "EvaluationSheet [id=" + id + ", type=" + type + ", createdAt=" + createdAt + ", availableUntil="
 				+ availableUntil + ", decision=" + decision + "]";
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public List<Indicator> getIndicators() {
+		return indicators;
+	}
+
+	public void setIndicators(List<Indicator> indicators) {
+		this.indicators = indicators;
 	}
 }

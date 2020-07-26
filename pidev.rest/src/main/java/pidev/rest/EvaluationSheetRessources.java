@@ -42,6 +42,28 @@ public class EvaluationSheetRessources {
 	}
 	
 	@GET
+	@Path("all-users")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response getAllUser()
+	{
+		return Response.status(Status.OK).entity(proxy.getAllUsers()).build();
+	}
+	
+	@GET
+	@Path("{email}/user")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUser(@PathParam("email") String email) {
+		return Response.status(Status.OK).entity(proxy.getUserEvaluationSheets(email)).build();
+	}
+	
+	@GET
+	@Path("{email}/user-evaluations")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserEvaluationSheets(@PathParam("email") String email) {
+		return Response.status(Status.OK).entity(proxy.getUserEvaluationSheets(email)).build();
+	}
+	
+	@GET
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response getAll(@QueryParam(value="reference") Long user_id)
 	{
@@ -49,14 +71,15 @@ public class EvaluationSheetRessources {
 			return Response.status(Status.OK).entity(proxy.get()).build();
 		
 		return null;
-
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public EvaluationSheet createEvaluationSheet(EvaluationSheet evaluationSheet) {
-		proxy.createFromRest(evaluationSheet.getSubjectId(), evaluationSheet.getCreatorId(), evaluationSheet.getType(), evaluationSheet.getCreatedAt(), evaluationSheet.getAvailableUntil());
+		Integer es = proxy.createFromRest(evaluationSheet.getSubjectId(), evaluationSheet.getCreatorId(), evaluationSheet.getType(), evaluationSheet.getCreatedAt(), evaluationSheet.getAvailableUntil());
+		evaluationSheet.setId(es);
+		
 		return evaluationSheet;
 	}
 	

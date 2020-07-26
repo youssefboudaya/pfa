@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +23,7 @@ public class Indicator implements Serializable {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private EvaluationSheet evaluationSheet;
 	
-	@OneToMany(mappedBy="indicator",cascade=CascadeType.ALL)
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="indicator",cascade=CascadeType.ALL)
 	private List<Question> questions; 
 	
 	public Indicator() {
@@ -49,6 +50,10 @@ public class Indicator implements Serializable {
 		this.label = label;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -56,5 +61,13 @@ public class Indicator implements Serializable {
 	@Override
 	public String toString() {
 		return "Indicator [id=" + id + ", label=" + label + "]";
+	}
+
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
 	}
 }

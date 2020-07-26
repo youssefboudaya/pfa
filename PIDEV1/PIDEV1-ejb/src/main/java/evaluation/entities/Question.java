@@ -42,10 +42,6 @@ public class Question implements Serializable {
 		this.question = question;
 	}
 
-	public Indicator getIndicator() {
-		return indicator;
-	}
-
 	public void setIndicator(Indicator indicator) {
 		this.indicator = indicator;
 	}
@@ -57,5 +53,9 @@ public class Question implements Serializable {
 	@Override
 	public String toString() {
 		return "Question [id=" + id + ", question=" + question + ", indicator=" + indicator + "]";
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

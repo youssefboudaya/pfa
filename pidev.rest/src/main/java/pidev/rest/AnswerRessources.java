@@ -5,12 +5,15 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import entities.Answer;
 import evaluation.services.AnswerServicesRemote;
@@ -31,6 +34,14 @@ public class AnswerRessources {
 	public static void props(String jndiName) throws NamingException{
 		AnswerRessources.context = new InitialContext();
 		AnswerRessources.proxy = (AnswerServicesRemote) context.lookup(jndiName);
+	}
+	
+	@GET
+	@Path("{id}/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllUserAnswers(@PathParam("id") Integer id) {
+		
+		return Response.status(Status.OK).entity(proxy.getUserAnswers(id)).build();
 	}
 	
 	@POST

@@ -9,6 +9,7 @@ import evaluation.entities.EvaluationType;
 
 @XmlRootElement
 public class EvaluationSheet {
+	private Integer id;
 	private Integer creatorId;
 	private Integer subjectId;
 	private EvaluationType type;
@@ -58,5 +59,19 @@ public class EvaluationSheet {
 	@XmlAttribute(name = "availableUntil", required = true)
 	public void setAvailableUntil(String availableUntil) {
 		this.availableUntil = availableUntil;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+	@XmlAttribute(name = "id")
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "EvaluationSheet [id=" + id + ", creatorId=" + creatorId + ", subjectId=" + subjectId + ", type=" + type
+				+ ", createdAt=" + createdAt + ", availableUntil=" + availableUntil + "]";
 	}
 }

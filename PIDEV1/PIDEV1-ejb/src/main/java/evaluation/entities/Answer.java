@@ -47,6 +47,10 @@ public class Answer implements Serializable {
 		this.score = 0;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public Utilisateur getEmploye() {
 		return employe;
 	}

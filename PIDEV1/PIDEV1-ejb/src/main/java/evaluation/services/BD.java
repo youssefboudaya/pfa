@@ -50,9 +50,9 @@ public class BD {
 	@PostConstruct
 	public void init() {
 		
-		Utilisateur admin = new Utilisateur();
-		Utilisateur employe = new Utilisateur();
-		Utilisateur coWorker = new Utilisateur();
+		Utilisateur admin = new Utilisateur("admin", "admin@email.com", "admin");
+		Utilisateur employe = new Utilisateur("employe", "test@email.com");
+		Utilisateur coWorker = new Utilisateur("coworker", "coworker@email.com");
 		
 		userService.create(admin);
 		userService.create(employe);

@@ -8,4 +8,5 @@ import evaluation.entities.Utilisateur;
 public interface UtilisateurServices {
 	void create(Utilisateur utilisateur);
 	Utilisateur get(Integer utilisateurId);
+	Utilisateur getByEmail(String email);
 }

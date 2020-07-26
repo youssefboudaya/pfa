@@ -2,6 +2,7 @@ package evaluation.impl;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -31,8 +32,11 @@ public class EvaluationSheetImpl implements EvaluationSheetServices, EvaluationS
 	UtilisateurServices userService;
 
 	@Override
-	public void create(EvaluationSheet evaluationSheet) {
-		em.persist(evaluationSheet);	
+	public Integer create(EvaluationSheet evaluationSheet) {
+		em.persist(evaluationSheet);
+		em.flush();
+		
+		return evaluationSheet.getId();
 	}
 
 	@Override
@@ -54,7 +58,7 @@ public class EvaluationSheetImpl implements EvaluationSheetServices, EvaluationS
 	}
 
 	@Override
-	public void createFromRest(Integer subjectId, Integer creatorId, EvaluationType type, String createdAt,
+	public Integer createFromRest(Integer subjectId, Integer creatorId, EvaluationType type, String createdAt,
 			String availableUntil) {
 		
 		Utilisateur subject = userService.get(subjectId);
@@ -65,7 +69,7 @@ public class EvaluationSheetImpl implements EvaluationSheetServices, EvaluationS
 		
 		EvaluationSheet evaluationSheet = new EvaluationSheet(subject, creator, type, creationDate, availableUntilDate);
 		
-		em.persist(evaluationSheet);
+		return this.create(evaluationSheet);
 	}
 
 	@Override
@@ -103,5 +107,24 @@ public class EvaluationSheetImpl implements EvaluationSheetServices, EvaluationS
 		}
 		
 		this.takeDecision(evaluationSheet, decision);
+	}
+
+	@Override
+	public List<EvaluationSheet> getUserEvaluationSheets(String email) {		
+			Utilisateur user = userService.getByEmail(email);
+		
+			Query query = em.createQuery("select e from EvaluationSheet e where e.subject =:userid or e.creator =:userid").setParameter("userid", user); 
+			return query.getResultList();		
+	}
+
+	@Override
+	public Utilisateur getUser(String email) {
+		return userService.getByEmail(email);
+	}
+
+	@Override
+	public List<Utilisateur> getAllUsers() {
+		Query query = em.createQuery("select u from Utilisateur u");
+		return query.getResultList();
 	}
 }

@@ -1,10 +1,13 @@
 package evaluation.impl;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import evaluation.entities.Answer;
 import evaluation.entities.EvaluationSheet;
@@ -60,5 +63,13 @@ public class AnswerImpl implements AnswerServices, AnswerServicesRemote{
 		Answer answer = this.getById(answerId);	
 		
 		this.noteAnAnswer(answer, note);
+	}
+
+	@Override
+	public List<Answer> getUserAnswers(Integer userId) {
+		Utilisateur user = userServices.get(userId);
+		
+		Query query = em.createQuery("select e from Answer e where e.employe =:userid").setParameter("userid", user); 
+		return query.getResultList();		
 	}
 }

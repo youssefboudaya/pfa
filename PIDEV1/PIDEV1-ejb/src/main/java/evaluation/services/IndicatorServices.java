@@ -6,7 +6,7 @@ import evaluation.entities.Indicator;
 
 @Local
 public interface IndicatorServices {
-	void create(Indicator indicator);
-	void createFromRest(Integer evaluationSheetId, String label);
+	Integer create(Indicator indicator);
+	Integer createFromRest(Integer evaluationSheetId, String label);
 	Indicator getById(Integer id);
 }

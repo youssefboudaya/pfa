@@ -23,16 +23,22 @@ public class IndicatorImpl implements IndicatorServices, IndicatorServicesRemote
 	EvaluationSheetServices evaluationSheetServices;
 
 	@Override
-	public void create(Indicator indicator) {
+	public Integer create(Indicator indicator) {
 		em.persist(indicator);
+		em.flush();
+
+		return indicator.getId();
 	}
 
 	@Override
-	public void createFromRest(Integer evaluationSheetId, String label) {
+	public Integer createFromRest(Integer evaluationSheetId, String label) {
 		EvaluationSheet evaluationSheet = evaluationSheetServices.getById(evaluationSheetId);
 		Indicator indicator = new Indicator(label, evaluationSheet);
 		
 		em.persist(indicator);
+		em.flush();
+
+		return indicator.getId();
 	}
 
 	@Override
