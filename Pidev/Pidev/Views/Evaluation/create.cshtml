@@ -1,0 +1,217 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Evaluation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="col-md-12 col-xs-12">
+        <div class="white-box">
+            <form class="form-horizontal form-material" id="create-evaluation-sheet">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-12">Subject</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="evaluation-subject" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-12">Type</label>
+                            <div class="col-md-12">
+                                <select class="form-control" id="evaluation-type" required>
+                                    <option value="FIN_ANNEE">End Of Year</option>
+                                    <option value="SEMESTRIEL">Half-annual</option>
+                                    <option value="FIN_PROJET">End Of Project</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-md-12">Available Until</label>
+                            <div class="col-md-12">
+                                <input type="date" class="form-control" id="available-until" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success pull-right mb-2" id="create-evaluation">Create Evaluation Sheet</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="white-box" id="indicator-div" hidden>
+            <form class="form-horizontal form-material" id="create-Indicator-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-md-12">Indicator</label>
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control" id="indicator-label" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>Indicators</h3>
+
+                                    <ul class="list-group" id="indicators-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="col-md-12">Question</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="new-question">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" id="add-new-question">+</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>Questions</h3>
+
+                                    <ul class="list-group" id="question-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    <button class="btn btn-success pull-right mb-2" id="create-Indicator-btn" disabled>Create Indicator</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var userEmail = "@User.Identity.Name";
+            var user = null;
+            var evaluationId = null;
+            var lastIndicatorId = null;
+            var questions = [];
+
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+
+            $.ajax({
+                type: "GET",
+                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${userEmail}/user`,
+                success: (response) => {
+                    user = response[0];
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/all-users`,
+                success: (response) => {
+                    response.forEach((single) => {
+                        $("#evaluation-subject").append(`<option value="${single.idUser}">${single.name}</option>`)
+                    });
+                }
+            });
+
+            $("#create-evaluation-sheet").submit((e) => {
+                e.preventDefault();
+                
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf8",
+                    },
+                    url: "http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations",
+                    data: JSON.stringify({
+                        "creatorId": user.id,
+                        "subjectId": parseInt($("#evaluation-subject").val()),
+                        "type": $("#evaluation-type").val(),
+                        "createdAt": today,
+                        "availableUntil": $("#available-until").val()
+                    }),
+                    success: function (response) {
+                        evaluationId = response.id;
+                        $("#create-evaluation").prop("disabled", true);
+                        $("#indicator-div").show(600);
+                    },
+                });
+            });
+
+            $("#add-new-question").click(() => {
+                let question = $("#new-question").val();
+
+                if (question) {
+                    questions.push(question);
+                    $("#question-list").append(`<li class="list-group-item">${question} ?</li>`);
+                    $("#new-question").val("");
+
+                    $("#create-Indicator-btn").prop("disabled", false);
+                }
+            });
+
+            $("#create-Indicator-form").submit((e) => {
+                e.preventDefault();
+
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf8",
+                    },
+                    url: "http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/indicators",
+                    data: JSON.stringify({
+                        "evaluationSheetId": evaluationId,
+                        "label": $("#indicator-label").val()
+                    }),
+                    success: function (response) {
+                        lastIndicatorId = response.id;
+
+                        if (lastIndicatorId) {
+                            questions.forEach((q) => {
+                                $.ajax({
+                                    type: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json; charset=utf8",
+                                    },
+                                    url: "http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/questions",
+                                    data: JSON.stringify({
+                                        "indicatorId": lastIndicatorId,
+                                        "question": q
+                                    }),
+                                    success: function (response) {
+                                        
+                                    },
+                                });
+                            });
+
+                            let tmp_indicator = $("#indicator-label").val();
+
+                            $("#indicators-list").append(`<li class="list-group-item">${tmp_indicator}</li>`)
+
+                            $("#new-question").val("");
+                            $("#indicator-label").val("");
+                            $("#question-list").html("");
+
+                            $("#create-Indicator-btn").prop("disabled", true);
+
+                            questions = [];
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+}
