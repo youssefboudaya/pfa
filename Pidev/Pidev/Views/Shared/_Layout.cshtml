@@ -51,7 +51,7 @@
             <div class="navbar-header">
                 <div class="top-left-part">
                     <!-- Logo -->
-                    <a class="logo" href="dashboard.html">
+                    <a class="logo" href="/">
                         <!-- Logo icon image, you can use font-icon also --><b>
                             <!--This is dark logo icon--><img src="/plugins/images/admin-logo.png" alt="home"
                                                               class="dark-logo" />
@@ -89,15 +89,11 @@
                     <ul class="nav" id="side-menu">
                         <li style="padding: 70px 0 0;">
                             <a asp-controller="Evaluation" asp-action="Index" class="waves-effect">
-                                <i class="fa fa-clock-o fa-fw"
-                                   aria-hidden="true"></i>Evaluations
+                                <i class="fa fa-file fa-fw"
+                                   aria-hidden="true"></i>Evaluations Sheets
                             </a>
                         </li>
                     </ul>
-                    <div class="center p-20">
-                        <a href="https://wrappixel.com/templates/ampleadmin/" target="_blank"
-                           class="btn btn-danger btn-block waves-effect waves-light">Upgrade to Pro</a>
-                    </div>
                 </div>
             </div>
         }
@@ -141,6 +137,82 @@
     <script src="/dashboard/js/waves.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="/dashboard/js/custom.min.js"></script>
+    <script src="/js/notify.min.js"></script>
+    <script src="/js/jquery.print.js"></script>
+    <script>
+        function getCurrentUser(email) {
+            let result;
+
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${email}/user`,
+                success: (response) => {
+                    result = response;
+                }
+            });
+
+            return result;
+        }
+
+        function getUserEvaluationSheets(userEmail) {
+            let result;
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${userEmail}/user-evaluations`,
+                success: (response) => {
+                    result = response;
+                }
+            });
+
+            return result;
+        }
+
+        function getEvaluationSheets() {
+            let result;
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations`,
+                success: (response) => {
+                    result = response;
+                }
+            });
+
+            return result;
+        }
+
+        function getAllUsers() {
+            let result;
+
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/all-users`,
+                success: (response) => {
+                    result = response;
+                }
+            });
+
+            return result;
+        }
+
+        function getEvaluationSheetById(evaluationSheetId) {
+            let result;
+
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${evaluationSheetId}/single`,
+                success: (response) => {
+                    result = response;
+                }
+            });
+
+            return result;
+        }
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 

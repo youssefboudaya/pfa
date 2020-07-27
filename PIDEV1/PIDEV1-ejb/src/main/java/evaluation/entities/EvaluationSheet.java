@@ -26,6 +26,14 @@ public class EvaluationSheet implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	public void setSubject(Utilisateur subject) {
+		this.subject = subject;
+	}
+
+	public Utilisateur getSubject() {
+		return subject;
+	}
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Utilisateur subject;
 	
@@ -114,9 +122,5 @@ public class EvaluationSheet implements Serializable {
 
 	public List<Indicator> getIndicators() {
 		return indicators;
-	}
-
-	public void setIndicators(List<Indicator> indicators) {
-		this.indicators = indicators;
 	}
 }

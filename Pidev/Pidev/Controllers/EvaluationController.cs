@@ -23,5 +23,21 @@ namespace Pidev.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public IActionResult Note(int id)
+        {
+            ViewBag.Id = id;
+
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Print(int id)
+        {
+            ViewBag.Id = id;
+
+            return View();
+        }
     }
 }

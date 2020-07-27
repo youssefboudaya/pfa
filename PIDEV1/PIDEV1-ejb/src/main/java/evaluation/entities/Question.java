@@ -1,13 +1,16 @@
 package evaluation.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Question implements Serializable {
@@ -22,6 +25,9 @@ public class Question implements Serializable {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Indicator indicator;
+	
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="question",cascade=CascadeType.ALL)
+	private List<Answer> answers; 
 
 	public Question(String question, Indicator indicator) {
 		super();
@@ -57,5 +63,13 @@ public class Question implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
 	}
 }

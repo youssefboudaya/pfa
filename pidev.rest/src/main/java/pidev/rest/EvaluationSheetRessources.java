@@ -53,7 +53,7 @@ public class EvaluationSheetRessources {
 	@Path("{email}/user")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@PathParam("email") String email) {
-		return Response.status(Status.OK).entity(proxy.getUserEvaluationSheets(email)).build();
+		return Response.status(Status.OK).entity(proxy.getUser(email)).build();
 	}
 	
 	@GET
@@ -61,6 +61,13 @@ public class EvaluationSheetRessources {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserEvaluationSheets(@PathParam("email") String email) {
 		return Response.status(Status.OK).entity(proxy.getUserEvaluationSheets(email)).build();
+	}
+	
+	@GET
+	@Path("{id}/single")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSingleEvaluationSheets(@PathParam("id") String id) {
+		return Response.status(Status.OK).entity(proxy.getById(Integer.parseInt(id))).build();
 	}
 	
 	@GET
@@ -72,7 +79,7 @@ public class EvaluationSheetRessources {
 		
 		return null;
 	}
-	
+		
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

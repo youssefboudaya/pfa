@@ -3,7 +3,7 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-    ViewData["Title"] = "Evaluation";
+    ViewData["Title"] = "Create Evaluation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="col-md-12">Subject</label>
+                            <label class="col-md-12">Employee</label>
                             <div class="col-md-12">
                                 <select class="form-control" id="evaluation-subject" required>
                                 </select>
@@ -75,7 +75,7 @@
                                     <input type="text" class="form-control" id="new-question">
                                 </div>
                                 <div class="col-md-4">
-                                    <button type="button" id="add-new-question">+</button>
+                                    <button class="btn btn-primary" type="button" id="add-new-question">+ Add new Question</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -97,7 +97,7 @@
     <script>
         $(document).ready(function () {
             var userEmail = "@User.Identity.Name";
-            var user = null;
+            var user;
             var evaluationId = null;
             var lastIndicatorId = null;
             var questions = [];
@@ -109,13 +109,7 @@
 
             today = yyyy + '-' + mm + '-' + dd;
 
-            $.ajax({
-                type: "GET",
-                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${userEmail}/user`,
-                success: (response) => {
-                    user = response[0];
-                }
-            });
+            user = getCurrentUser(userEmail);
 
             $.ajax({
                 type: "GET",
@@ -137,7 +131,7 @@
                     },
                     url: "http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations",
                     data: JSON.stringify({
-                        "creatorId": user.id,
+                        "creatorId": user.idUser,
                         "subjectId": parseInt($("#evaluation-subject").val()),
                         "type": $("#evaluation-type").val(),
                         "createdAt": today,
@@ -147,6 +141,8 @@
                         evaluationId = response.id;
                         $("#create-evaluation").prop("disabled", true);
                         $("#indicator-div").show(600);
+
+                        $.notify("New evaluation sheet successfully created.", "success");
                     },
                 });
             });
@@ -208,6 +204,8 @@
                             $("#create-Indicator-btn").prop("disabled", true);
 
                             questions = [];
+
+                            $.notify("Indicator and questions has been attached to current evaluation sheet.", "success");
                         }
                     },
                 });

@@ -199,4 +199,5 @@ C:\Users\artan\source\repos\Pidev\Pidev\obj\Debug\netcoreapp3.1\Razor\Areas\Iden
 C:\Users\artan\source\repos\Pidev\Pidev\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\artan\source\repos\Pidev\Pidev\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
 C:\Users\artan\source\repos\Pidev\Pidev\obj\Debug\netcoreapp3.1\Razor\Views\Evaluation\create.cshtml.g.cs
-C:\Users\artan\source\repos\Pidev\Pidev\obj\Debug\netcoreapp3.1\Razor\Views\Evaluation\Index1.cshtml.g.cs
+C:\Users\artan\source\repos\Pidev\Pidev\obj\Debug\netcoreapp3.1\Razor\Views\Evaluation\Note.cshtml.g.cs
+C:\Users\artan\source\repos\Pidev\Pidev\obj\Debug\netcoreapp3.1\Razor\Views\Evaluation\Print.cshtml.g.cs

@@ -22,7 +22,7 @@ public class Utilisateur implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	/*
 	public List<EvaluationSheet> getEvaluationSheets() {
 		return evaluationSheets;
 	}
@@ -30,7 +30,7 @@ public class Utilisateur implements Serializable {
 	public void setEvaluationSheets(List<EvaluationSheet> evaluationSheets) {
 		this.evaluationSheets = evaluationSheets;
 	}
-
+	*/
 	public Utilisateur(String email) {
 		super();
 		this.email = email;

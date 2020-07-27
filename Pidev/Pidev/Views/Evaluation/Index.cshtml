@@ -3,7 +3,7 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-    ViewData["Title"] = "Create Evaluation";
+    ViewData["Title"] = "Evaluations List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,8 +11,8 @@
     <div class="col-sm-12">
         <div class="white-box">
             <div class="col-sm-12">
-                <h3 class="box-title">Basic Table</h3>
-                <a asp-controller="Evaluation" asp-action="Create" class="btn btn-success pull-right">
+                <h3 class="box-title">Evaluation List</h3>
+                <a asp-controller="Evaluation" asp-action="Create" class="btn btn-success pull-right" id="create-link-btn">
                     Create New Evaluation Sheet
                 </a>
             </div>
@@ -22,10 +22,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>Created At</th>
+                            <th>Available Until</th>
                             <th>Username</th>
-                            <th>Role</th>
+                            <th>Comment</th>
+                            <th>Decision</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -60,6 +61,7 @@
         
     </div>
 </div>
+
 @section Scripts {
     <script>
 
@@ -69,13 +71,7 @@
             var user = null;
             var evaluationBtn = null;
 
-            $.ajax({
-                type: "GET",
-                url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${userEmail}/user`,
-                success: (response) => {
-                    user = response[0];
-                }
-            });
+            user = getCurrentUser(userEmail);
 
             $.ajax({
                 type: "GET",
@@ -88,18 +84,28 @@
                                 row += `<td>${evaluation.id}</td>`;
                                 row += `<td>${evaluation.createdAt}</td>`;
                                 row += `<td>${evaluation.availableUntil}</td>`;
+                                row += `<td>${evaluation.subject.name}</td>`;
                                 row += `<td>${(evaluation.comment) ? evaluation.comment : '--'}</td>`;
                                 row += `<td>${(evaluation.decision) ? evaluation.decision : '--'}</td>`;
-                                row += `<td><button class="btn btn-primary evaluate-btn" data-id="${evaluation.id}" data-toggle="modal" data-target="#evaluateModal">Evaluate</button></td>`;
+                                if (user.role == "admin") {
+                                    row += `<td><a href="/Evaluation/Note/${evaluation.id}" class="btn btn-info" style="margin-right:10px">Manage</a><a href="/Evaluation/Print/${evaluation.id}" class="btn btn-warning" style="margin-right:10px">Print</a></td>`;
+                                } else {
+                                    console.log(evaluation.decision);
+                                    if (evaluation.decision && evaluation.decision != "RIEN") {
+                                            row += `<td><button class="btn btn-primary" disabled>Evaluate</button></td>`;
+                                        } else {
+                                            row += `<td><button class="btn btn-primary evaluate-btn" data-id="${evaluation.id}" data-toggle="modal" data-target="#evaluateModal">Evaluate</button></td>`;
+                                        }
+                                }
                             row += `</tr>`;
                         $('tbody').append(row);
                     });
                 }
             });
 
-            $("add-evaluation-btn").click(() => {
-
-            });
+            if (user.role != "admin") {
+                $("#create-link-btn").remove()
+            }
 
             $(document).on("click", ".evaluate-btn", function () {
                 evaluationBtn = $(this);
@@ -136,7 +142,7 @@
                         url: "http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/answers",
                         data: JSON.stringify({
                             "questionId": questionId,
-                            "employeId": user.id,
+                            "employeId": user.idUser,
                             "response": answer,
                             "score": null
                         }),
@@ -144,10 +150,12 @@
                             $("#evaluateModal").modal("hide");
                             $("#evaluation-body").html("");
 
-                            evaluationBtn.prop('disabled', true);
+                            evaluationBtn.prop("disabled", true);
                         },
                     });
                 });
+
+                $.notify("Evaluation sheet has been successfully filled.", "success");
             });
         });
     </script>

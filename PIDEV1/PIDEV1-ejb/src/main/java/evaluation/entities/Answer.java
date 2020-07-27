@@ -58,7 +58,7 @@ public class Answer implements Serializable {
 	public void setEmploye(Utilisateur employe) {
 		this.employe = employe;
 	}
-
+/*
 	public Question getQuestion() {
 		return question;
 	}
@@ -66,7 +66,7 @@ public class Answer implements Serializable {
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
-
+*/
 	public String getReponse() {
 		return reponse;
 	}

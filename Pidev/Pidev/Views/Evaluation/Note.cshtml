@@ -1,0 +1,282 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Evaluations List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12 col-xs-12">
+        <div class="white-box">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-md-12">Subject</label>
+                        <div class="col-md-12">
+                            <select class="form-control" id="users-select" required>
+                                <option>Select user</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="white-box">
+            <div class="col-sm-12">
+                <h3 class="box-title">User Evaluation List</h3>
+            </div>
+            <p class="text-muted">This table display evaluation sheets <code>of selected.</code></p>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Created At</th>
+                            <th>Available Until</th>
+                            <th>Decision</th>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Note Modal -->
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+    <form id="update-scores-form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noteModalLabel">Note Evaluation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="note-modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="update-score-btn">Update scores</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Comment Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <form id="comment-form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalLabel">Comment On Evaluation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="comment-modal-body">
+                    <div class="form-group">
+                        <label>Comment</label>
+                        <textarea class="form-control" id="evaluation-comment"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="update-comment-btn">Comment</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Decision Modal -->
+<div class="modal fade" id="decisionModal" tabindex="-1" role="dialog" aria-labelledby="decisionModalLabel" aria-hidden="true">
+    <form id="decision-form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="decisionModalLabel">Decide On Evaluation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="decision-modal-body">
+                    <div class="form-group">
+                        <label>Decision</label>
+                        <select class="form-control" id="evaluation-decision">
+                            <option value="RIEN">RIEN</option>
+                            <option value="AUGMENTATION">AUGMENTATION</option>
+                            <option value="PRIME">PRIME</option>
+                            <option value="PROMOTION">PROMOTION</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="update-decision-btn">Take Decision</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var userEmail = "@User.Identity.Name";
+            var user;
+            var users;
+            var evaluationSheets;
+            var selectedEvaluationSheet;
+
+            evaluationSheets = getEvaluationSheets();
+            user = getCurrentUser(userEmail);
+            users = getAllUsers();
+
+            users.forEach((u) => {
+                let opt = `<option value="${u.idUser}">${u.name}</option>`;
+
+                $("#users-select").append(opt);
+            });
+
+            $(document).on("change", "#users-select", function () {
+                $("tbody").html("");
+
+                let selectedUserId = $(this).val();
+                let userEvaluations;
+                let selectedUser = users.find((u) => u.idUser == selectedUserId)
+
+                if (selectedUser) {
+                    userEvaluations = getUserEvaluationSheets(selectedUser.email);
+
+                    userEvaluations.forEach((ue) => {
+                        let row = `<tr>`
+                                row += `<td>${ue.id}</td>`
+                                row += `<td>${ue.createdAt}</td>`
+                                row += `<td>${ue.availableUntil}</td>`
+                                row += `<td>${ue.decision}</td>`
+                                row += `<td>${ue.comment}</td>`
+                        row += `<td><button class="btn btn-primary note-btn" data-toggle="modal" data-target="#noteModal" style="margin-right:10px" data-id="${ue.id}">Note</button><button class="btn btn-secondary comment-btn" data-toggle="modal" data-target="#commentModal" style="margin-right:10px" data-id="${ue.id}">Comment</button><button class="btn btn-info decision-btn" data-toggle="modal" data-target="#decisionModal" data-id="${ue.id}">Take Decision</button</td>`
+                        row += `</tr>`
+
+                        $("tbody").append(row);
+                    })
+                }
+            });
+
+            $(document).on("click", ".note-btn", function () {
+                let id = $(this).data("id");
+                selectedEvaluationSheet = id
+
+                let evaluation = evaluationSheets.find(e => e.id == selectedEvaluationSheet);
+
+                if (evaluation) {
+                    $("#note-modal-body").html("")
+                    evaluation.indicators.forEach((indicator) => {
+                        let html = `<div class="card">`
+                                html += `<div class="card-body">`
+                        html += `<h5 class="card-title" style="text-decoration:underline">${indicator.label}</h5>`
+                        indicator.questions.forEach((q) => {
+                            html += `<h3>Question : ${q.question}</h3>`
+                            html += `<h4>Answers</h4>`
+                            if (q.answers) {
+                                q.answers.forEach((answer) => {
+                                    html += `<p class="card-text"><b>${answer.employe.name} :</b> ${answer.reponse}</p>`
+                                    html += `score : <input type="number" class="note" data-id="${answer.id}" value="${answer.score}">`
+                                })
+                            }
+
+                        })
+                                html += `</div>`
+                            html += `</div>`
+
+                        $("#note-modal-body").append(html);
+                    })
+                }
+            });
+
+            $("#update-scores-form").submit((e) => {
+                e.preventDefault();
+
+                $(".note").each(function () {
+                    let id = $(this).data("id");
+                    let newScore = $(this).val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/answers/${id}`,
+                        data: newScore,
+                        success: function (response) {
+                        },
+                    });
+                });
+
+                $("#noteModal").modal("hide");
+                $.notify("Evaluation sheet has been successfully graded.", "success");
+            });
+
+            $(document).on("click", ".comment-btn", function () {
+                let id = $(this).data("id");
+                let evaluation = evaluationSheets.find(e => e.id == id);
+
+                if (evaluation) {
+                    $("#evaluation-comment").val(evaluation.comment);
+                    selectedEvaluationSheet = id;
+                }
+            });
+
+            $("#update-comment-btn").click(function () {
+                let newComment = $("#evaluation-comment").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${selectedEvaluationSheet}/comment`,
+                    data: newComment,
+                    success: function (response) {
+                    },
+                });
+
+                $("#commentModal").modal("hide");
+                $.notify("Evaluation sheet has been successfully commented.", "success");
+
+            });
+
+            $(document).on("click", ".decision-btn", function () {
+                let id = $(this).data("id");
+                let evaluation = evaluationSheets.find(e => e.id == id);
+
+                if (evaluation) {
+                    $("#evaluation-decision").val(evaluation.decision);
+                    selectedEvaluationSheet = id;
+                }
+            });
+
+            $("#update-decision-btn").click(function () {
+                let newDecision = $("#evaluation-decision").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: `http://localhost:9080/pidev.rest-0.0.1-SNAPSHOT/restfull/evaluations/${selectedEvaluationSheet}/decision`,
+                    data: newDecision,
+                    success: function (response) {
+                    },
+                });
+
+                $("#decisionModal").modal("hide");
+                $.notify("Your decision has been successfully stored.", "success");
+            });
+        });
+    </script>
+}
